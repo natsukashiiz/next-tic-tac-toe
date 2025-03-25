@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  next-tic-tac-toe:
+    container_name: next-tic-tac-toe
+    image: natsukashiiz/next-tic-tac-toe
+    build: .
+    ports:
+      - "3000:3000"

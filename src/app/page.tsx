@@ -93,13 +93,13 @@ export default function Home() {
     return () => {
       socket.onmessage = null;
     };
-  }, [socket, handleRefreshRooms]);
+  }, [socket]);
 
   return (
-    <div className="flex h-screen">
-      <Card className="m-auto flex flex-col gap-8 py-6 px-2 min-w-svh">
+    <div className="flex h-screen p-2">
+      <Card className="m-auto flex flex-col gap-8 py-6 px-2 sm:w-[1024px]">
         <CardHeader className="flex flex-row justify-between">
-          <CardTitle className="text-3xl">Game Rooms 🎮</CardTitle>
+          <CardTitle className="text-xl sm:text-3xl">Game Rooms 🎮</CardTitle>
           <div className="flex flex-row gap-2">
             <Dialog open={modalOpen} onOpenChange={setModalOpen}>
               <DialogTrigger asChild>
@@ -137,7 +137,7 @@ export default function Home() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-4 gap-2 max-h-96 overflow-y-scroll">
+        <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-96 overflow-y-scroll">
           {rooms.map((room, i) => (
             <Button
               key={i}
@@ -155,6 +155,17 @@ export default function Home() {
         </CardContent>
         <CardFooter className="flex flex-col gap-2 justify-center">
           <p>Create or join room for play game.</p>
+          <p>
+            Made by{" "}
+            <a
+              href="https://github.com/natsukashiiz"
+              target="_blank"
+              className="text-blue-500 font-medium"
+            >
+              natsukshiiz
+            </a>
+          </p>
+          <p>version: 1.0.0</p>
         </CardFooter>
       </Card>
     </div>

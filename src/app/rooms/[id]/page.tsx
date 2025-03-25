@@ -168,7 +168,7 @@ export default function Home() {
   }, [socket, params.id]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen p-2">
       <Card className="m-auto flex flex-col gap-8 py-6 px-2">
         <CardHeader className="flex flex-row justify-between">
           <CardTitle className="text-3xl">
@@ -267,7 +267,7 @@ export default function Home() {
               <div
                 key={yIndex + ":" + xIndex}
                 className={`
-                    w-[150px] h-[150px] 
+                    w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] 
                     border-black 
                     ${yIndex === 1 && "border-y-8"}
                     ${xIndex === 1 && "border-x-8"} 
@@ -335,9 +335,11 @@ function Symbol({ data }: { data: string | null }) {
 }
 
 function OSymbol() {
-  return <div className="text-center text-9xl text-red-500">O</div>;
+  return <div className="text-center text-7xl md:text-9xl text-red-500">O</div>;
 }
 
 function XSymbol() {
-  return <div className="text-center text-9xl text-blue-500">X</div>;
+  return (
+    <div className="text-center text-7xl md:text-9xl text-blue-500">X</div>
+  );
 }

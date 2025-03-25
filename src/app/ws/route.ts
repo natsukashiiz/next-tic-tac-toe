@@ -40,26 +40,6 @@ const handleLeaveRoom = (
   clients: Set<WebSocket>,
   client: WebSocket
 ) => {
-  for (const player of room.players) {
-    player.socket.send(
-      JSON.stringify({
-        success: true,
-        event: "ROOM_DATA",
-        data: {
-          room: {
-            id: roomId,
-            name: room.name,
-            full: room.full,
-            players: room.players.map(({ symbol, score }) => ({
-              symbol,
-              score,
-            })),
-          },
-        },
-      })
-    );
-  }
-
   const players = room.players.filter((p) => p.sessionId !== sessionId);
 
   if (players.length === 0) {
@@ -72,6 +52,26 @@ const handleLeaveRoom = (
       game: new Game(),
       full: false,
     });
+  }
+
+  for (const player of players) {
+    player.socket.send(
+      JSON.stringify({
+        success: true,
+        event: "ROOM_DATA",
+        data: {
+          room: {
+            id: roomId,
+            name: room.name,
+            full: room.full,
+            players: players.map(({ symbol, score }) => ({
+              symbol,
+              score,
+            })),
+          },
+        },
+      })
+    );
   }
 
   for (const c of clients) {
@@ -119,8 +119,6 @@ export function SOCKET(
   const params = new URLSearchParams(request.url?.split("?")[1]);
   const sessionId = params.get("sessionId");
 
-  console.log("Socket connected ==> ", { sessionId });
-
   if (!sessionId) {
     client.send(
       JSON.stringify({
@@ -134,7 +132,6 @@ export function SOCKET(
   }
 
   client.on("message", (message) => {
-    // console.log("message ==> ", message.toString());
     const json = JSON.parse(message.toString());
     switch (json.command) {
       case "PING":
@@ -368,10 +365,13 @@ export function SOCKET(
               room.game.playOnline();
             }
 
-            const symbol =
-              room.players.length === 1
-                ? room.game.getPlayer1()
-                : room.game.getPlayer2();
+            let symbol;
+
+            if (room.players.length === 1) {
+              symbol = room.players[0].symbol === "X" ? "O" : "X";
+            } else {
+              symbol = Math.floor(Math.random() * 2) === 0 ? "X" : "O";
+            }
 
             room.players.push({
               sessionId,
@@ -611,8 +611,6 @@ export function SOCKET(
   });
 
   client.on("close", () => {
-    console.log("A client disconnected");
-
     const user = users.find((u) => u.sessionId === sessionId);
 
     if (user) {
